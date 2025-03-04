@@ -34,9 +34,3 @@ This extension contributes the following settings:
 
 - Does not support non-Linux remote servers.
 - High-frequency monitoring intervals may cause performance overhead on the remote server.
-
-## Release Notes
-
-### 0.1.0
-
-Initial release of SSH Remote Monitor with real-time CPU, memory, and load average monitoring.

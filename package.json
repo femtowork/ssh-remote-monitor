@@ -2,7 +2,9 @@
   "name": "ssh-remote-monitor",
   "displayName": "ssh-remote-monitor",
   "description": "Monitor the resources of the server connected via Remote SSH. This extension displays CPU usage , memory usage, and load averages in the status bar.",
-  "version": "0.0.1",
+  "version": "0.1.0",
+  "icon": "resources/icon.png",
+  "publisher": "a1035480-4465-664f-9c17-1b96286d9712",
   "license": "MIT",
   "engines": {
     "vscode": "^1.75.0"

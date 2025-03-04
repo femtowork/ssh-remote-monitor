@@ -1,6 +1,6 @@
 # Change Log
 
-## [0.1.1] - 2025-03-05
+## [0.1.2] - 2025-03-05
 
 Rename extension display name.
 

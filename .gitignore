@@ -1,0 +1,29 @@
+# Node modules
+node_modules/
+
+# Build directories
+dist/
+build/
+
+# VS Code directories
+.vscode/
+
+# Logs
+*.log
+
+# Package File
+*.vsix
+
+# Environment variables
+.env
+
+# Coverage reports
+coverage/
+
+# TypeScript build info
+*.tsbuildinfo
+
+# Misc files
+.clinerules
+plan.md
+TODO.md

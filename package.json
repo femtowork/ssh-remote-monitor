@@ -1,0 +1,57 @@
+{
+  "name": "ssh-remote-monitor",
+  "displayName": "ssh-remote-monitor",
+  "description": "Monitor the resources of the server connected via Remote SSH. This extension displays CPU usage , memory usage, and load averages in the status bar.",
+  "version": "0.0.1",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "main": "./dist/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "configuration": {
+      "title": "SSH Remote Monitor",
+      "properties": {
+        "ssh-remote-monitor.monitorIntervalSeconds": {
+          "type": "number",
+          "enum": [
+            1,
+            3,
+            5,
+            10,
+            30,
+            60
+          ],
+          "default": 1,
+          "description": "Monitoring interval (seconds). Sets the frequency of resource information updates."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "npm run check-types && npm run lint && node esbuild.mjs",
+    "package": "npm run check-types && npm run lint && node esbuild.mjs --production",
+    "pretest": "npm run compile && npm run lint",
+    "check-types": "tsc --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/vscode": "^1.97.0",
+    "@typescript-eslint/eslint-plugin": "^8.25.0",
+    "@typescript-eslint/parser": "^8.25.0",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "esbuild": "^0.25.0",
+    "eslint": "^9.21.0",
+    "jest-mock-vscode": "^4.1.0",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.7"
+  }
+}

@@ -18,6 +18,8 @@ class ResourceMonitor {
   private intervalSeconds: number;
   private statusBarItem: vscode.StatusBarItem;
   private displayOptions: DisplayOptions;
+  private lastCpuIdle: number | null = null;
+  private lastCpuTotal: number | null = null;
 
   constructor(intervalSeconds: number = 1) {
     this.intervalSeconds = intervalSeconds;
@@ -151,7 +153,7 @@ class ResourceMonitor {
   /**
    * Parses CPU usage
    * @param data Content of /proc/stat
-   * @returns Percentage of CPU usage
+   * @returns Percentage of CPU usage based on the difference since last measurement
    */
   public parseCPUUsage(data: string): number {
     const lines = data.split("\n");
@@ -163,7 +165,29 @@ class ResourceMonitor {
     const parts = cpuLine.split(/\s+/).slice(1).map(Number);
     const idle = parts[3];
     const total = parts.reduce((a, b) => a + b, 0);
-    const usage = ((total - idle) / total) * 100;
+
+    // First measurement, store values and return 0
+    if (this.lastCpuIdle === null || this.lastCpuTotal === null) {
+      this.lastCpuIdle = idle;
+      this.lastCpuTotal = total;
+      return 0;
+    }
+
+    // Calculate difference between current and last measurement
+    const idleDiff = idle - this.lastCpuIdle;
+    const totalDiff = total - this.lastCpuTotal;
+
+    // Store current values for next measurement
+    this.lastCpuIdle = idle;
+    this.lastCpuTotal = total;
+
+    // Avoid division by zero
+    if (totalDiff === 0) {
+      return 0;
+    }
+
+    // Calculate usage based on the difference
+    const usage = ((totalDiff - idleDiff) / totalDiff) * 100;
     return parseFloat(usage.toFixed(2));
   }
 

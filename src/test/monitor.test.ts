@@ -75,8 +75,8 @@ describe("ResourceMonitor", () => {
   });
 
   describe("parseCPUUsage", () => {
-    it("should correctly parse CPU usage from /proc/stat data", () => {
-      const cpuData = `cpu  1000 200 300 4000 500 600 700 800
+    it("should return 0 on first call and calculate usage on subsequent calls", () => {
+      const cpuData1 = `cpu  1000 200 300 4000 500 600 700 800
 cpu0 100 20 30 400 50 60 70 80
 cpu1 100 20 30 400 50 60 70 80
 intr 123456789
@@ -86,13 +86,32 @@ processes 12345
 procs_running 1
 procs_blocked 0`;
 
-      const result = monitor.parseCPUUsage(cpuData);
+      // First call should return 0 and store the values
+      const firstResult = monitor.parseCPUUsage(cpuData1);
+      expect(firstResult).toBe(0);
 
-      //  (total - idle) / total * 100
-      // total = 1000 + 200 + 300 + 4000 + 500 + 600 + 700 + 800 = 8100
-      // idle = 4000
-      // (8100 - 4000) / 8100 * 100 = 50.62%
-      expect(result).toBeCloseTo(50.62, 1);
+      // Second call with new data
+      const cpuData2 = `cpu  1500 300 400 4500 600 700 800 900
+cpu0 150 30 40 450 60 70 80 90
+cpu1 150 30 40 450 60 70 80 90
+intr 123456790
+ctxt 123456790
+btime 1234567890
+processes 12346
+procs_running 2
+procs_blocked 0`;
+
+      const secondResult = monitor.parseCPUUsage(cpuData2);
+
+      // Calculate expected result:
+      // total1 = 1000 + 200 + 300 + 4000 + 500 + 600 + 700 + 800 = 8100
+      // idle1 = 4000
+      // total2 = 1500 + 300 + 400 + 4500 + 600 + 700 + 800 + 900 = 9700
+      // idle2 = 4500
+      // totalDiff = 9700 - 8100 = 1600
+      // idleDiff = 4500 - 4000 = 500
+      // usage = ((totalDiff - idleDiff) / totalDiff) * 100 = ((1600 - 500) / 1600) * 100 = 68.75%
+      expect(secondResult).toBeCloseTo(68.75, 1);
     });
 
     it("should return 0 if CPU data is invalid", () => {
